@@ -1,0 +1,100 @@
+// stdafx.cpp : 只包括标准包含文件的源文件
+// 23_派生类.pch 将作为预编译头
+// stdafx.obj 将包含预编译类型信息
+
+#include "stdafx.h"
+#include <iostream>
+#include <string>
+
+class Graph   //抽象类
+{
+protected:
+	double x;
+	double y;
+public:
+	Graph(double x,double y);     //构造函数
+	//void virtual showArea();      //虚函数或 virtual void showArea()
+	void virtual showArea()=0;    //纯虚函数
+	virtual ~Graph();             //虚析构函数
+};
+Graph::Graph(double x,double y)   //初始化构造函数
+{
+	this->x=x;
+	this->y=y;
+}
+void Graph::showArea()                  //定义showArea()函数
+{
+	std::cout<<"计算图形面积"<<std::endl;
+}
+Graph::~Graph()                            //为了显式的调用图形类的虚构函数，如下定义
+{
+	std::cout<<"调用图形类析构函数"<<std::endl;
+}
+
+class Rectangle:public Graph
+{
+public:
+	Rectangle(double x,double y):Graph(x,y){};
+	void showArea();                       //虚函数
+    ~Rectangle();
+};
+void Rectangle::showArea()
+{
+	std::cout<<"矩形面积为："<<x*y<<std::endl;
+}
+Rectangle::~Rectangle()
+{
+	std::cout<<"调用矩形类析构函数"<<std::endl;
+}
+
+class Triangle:public Graph
+{
+public:
+	Triangle(double d,double h):Graph(d,h){};
+    virtual void showArea();
+	~Triangle();
+};
+void Triangle::showArea()
+{
+	std::cout<<"三角形面积为："<<x*y*0.5<<std::endl;
+}
+Triangle::~Triangle()
+{
+	std::cout<<"调用三角形类析构函数"<<std::endl;
+}
+class Circle:public Graph
+{
+public:
+	Circle(double r):Graph(r,r){}; 
+	virtual void showArea();
+	~Circle();
+};
+void Circle::showArea()
+{
+	std::cout<<"圆形的面积为："<<3.14*x*y<<std::endl;
+}
+Circle::~Circle()
+{
+	std::cout<<"调用圆形类的析构函数："<<std::endl;
+}
+int main()
+{
+	{//Graph g(10,10)   //抽象类不能建立对象
+	Graph *graph;
+	Rectangle rectangle(10,5);
+	graph=&rectangle;
+	graph->showArea();
+
+	Triangle triangle(5,2.4);
+	graph=&triangle;
+	graph->showArea();
+
+	Graph *graph1;
+	graph1=new Circle(2);                    //new运算符创建无名对象
+	graph1->showArea();
+	delete graph1;                          //delete运算符撤销派生类circle无名对象
+	}
+    system("pause");
+	return 0;
+}
+
