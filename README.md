@@ -1,2 +1,2 @@
-# two
-test for study
+
+c++派生类
